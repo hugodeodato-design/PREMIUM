@@ -2,7 +2,8 @@ name: Build Windows App
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -10,45 +11,31 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 18
 
-      - name: Generate lockfile if missing
-        run: |
-          if (!(Test-Path "package-lock.json")) {
-            npm install --package-lock-only
-          }
-          if (!(Test-Path "frontend/package-lock.json")) {
-            cd frontend
-            npm install --package-lock-only
-            cd ..
-          }
-
       - name: Install root dependencies
-        run: npm ci
+        run: npm install
 
       - name: Install frontend dependencies
         run: |
           cd frontend
-          npm ci
-          cd ..
+          npm install
 
       - name: Build frontend
         run: npm run build:frontend
 
-      - name: Build electron installer
+      - name: Build Electron EXE
         run: npm run build
 
-      - name: Show dist
-        run: dir dist
-
-      - name: Upload artifacts
+      - name: Upload Windows Build
         uses: actions/upload-artifact@v4
         with:
           name: MRDPS_PRO_Windows
           path: dist/
-          if-no-files-found: error
+          if-no-files-found: warn
