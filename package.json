@@ -1,0 +1,45 @@
+{
+  "name": "mrdps_pro",
+  "version": "1.0.0",
+  "description": "MRDPS PRO - Gestion de stock (premium)",
+  "author": "MRDPS 27",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm:dev-front\" \"npm:start-electron\"",
+    "dev-front": "cd frontend && npm run dev",
+    "start-electron": "electron .",
+    "build:frontend": "cd frontend && npm run build",
+    "build": "npm run build:frontend && electron-builder --win --x64"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.0.0"
+  },
+  "build": {
+    "appId": "com.mrdps.pro",
+    "productName": "MRDPS PRO",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**",
+      "frontend/dist/**/*",
+      "data/**/*",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "frontend/dist",
+        "to": "app/frontend/dist"
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "electron/assets/mrds_icon.ico"
+    },
+    "publish": null
+  }
+}
